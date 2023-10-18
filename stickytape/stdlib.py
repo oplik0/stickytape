@@ -324,6 +324,12 @@ _stdlib_modules = set([
 
     "sunaudiodev",
     "SUNAUDIODEV",
+    "enum",
+    "typing",
+    "_compression",
+    "typing_extensions",
+    "attr",
+    
 ])
 
 
