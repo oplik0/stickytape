@@ -2,6 +2,7 @@ import ast
 import os.path
 import subprocess
 import python_minifier
+import base64
 
 from .stdlib import is_stdlib_module
 
@@ -93,7 +94,7 @@ class ModuleWriterGenerator(object):
             )
             output.append("    __stickytape_write_module({0}, {1})\n".format(
                 repr(module_path),
-                repr(minified)
+                repr(base64.b85encode(minified.encode("utf-8")))
             ))
         return "".join(output)
 

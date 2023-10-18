@@ -1,5 +1,6 @@
 
 import contextlib as __stickytape_contextlib
+from base64 import b85decode as __stickytape_b85decode
 
 @__stickytape_contextlib.contextmanager
 def __stickytape_temporary_dir():
@@ -29,7 +30,7 @@ with __stickytape_temporary_dir() as __stickytape_working_dir:
 
         full_path = os.path.join(__stickytape_working_dir, path)
         with open(full_path, "wb") as module_file:
-            module_file.write(contents)
+            module_file.write(__stickytape_b85decode(contents))
 
     import sys as __stickytape_sys
     __stickytape_sys.path.insert(0, __stickytape_working_dir)
