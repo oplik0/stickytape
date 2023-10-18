@@ -12,6 +12,7 @@ def __stickytape_temporary_dir():
     finally:
         shutil.rmtree(dir_path)
 
+global __stickytape_working_dir
 with __stickytape_temporary_dir() as __stickytape_working_dir:
     def __stickytape_write_module(path, contents):
         import os, os.path
@@ -31,7 +32,7 @@ with __stickytape_temporary_dir() as __stickytape_working_dir:
         full_path = os.path.join(__stickytape_working_dir, path)
         with open(full_path, "wb") as module_file:
             module_file.write(__stickytape_b85decode(contents))
-
+    
     import sys as __stickytape_sys
     __stickytape_sys.path.insert(0, __stickytape_working_dir)
 
