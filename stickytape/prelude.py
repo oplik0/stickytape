@@ -1,3 +1,5 @@
+global __stickytape_b85decode
+global __stickytape_contextlib
 
 import contextlib as __stickytape_contextlib
 from base64 import b85decode as __stickytape_b85decode
