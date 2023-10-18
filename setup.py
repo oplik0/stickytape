@@ -16,6 +16,9 @@ setup(
     url='https://github.com/mwilliamson/stickytape',
     packages=['stickytape'],
     python_requires='>=3.5',
+    install_requires=[
+        "python-minifier==2.9.0"
+    ],
     license="BSD-2-Clause",
     entry_points={
         "console_scripts": [

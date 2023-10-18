@@ -1,6 +1,7 @@
 import ast
 import os.path
 import subprocess
+import python_minifier
 
 from .stdlib import is_stdlib_module
 
@@ -77,9 +78,22 @@ class ModuleWriterGenerator(object):
     def build(self):
         output = []
         for module_path, module_source in self._modules.values():
+            minified = python_minifier.minify(repr(module_source),
+                                    remove_literal_statements=True,
+                                    remove_annotations=True,
+                                    remove_pass=True,
+                                    combine_imports=True,
+                                    hoist_literals=True,
+                                    rename_globals=True,
+                                    rename_locals=True,
+                                    remove_asserts=True,
+                                    remove_debug=True,
+                                    remove_explicit_return_none=True,
+                                    preserve_shebang=False,
+            )
             output.append("    __stickytape_write_module({0}, {1})\n".format(
                 repr(module_path),
-                repr(module_source)
+                minified
             ))
         return "".join(output)
 
