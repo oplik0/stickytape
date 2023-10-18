@@ -81,7 +81,7 @@ class ModuleWriterGenerator(object):
         for module_path, module_source in self._modules.values():
             minified = python_minifier.minify(module_source,
                                     remove_literal_statements=True,
-                                    remove_annotations=True,
+                                    remove_annotations=False,
                                     remove_pass=True,
                                     combine_imports=True,
                                     hoist_literals=True,
