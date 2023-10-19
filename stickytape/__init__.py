@@ -79,22 +79,22 @@ class ModuleWriterGenerator(object):
     def build(self):
         output = []
         for module_path, module_source in self._modules.values():
-            minified = python_minifier.minify(module_source,
-                                    remove_literal_statements=True,
-                                    remove_annotations=False,
-                                    remove_pass=True,
-                                    combine_imports=True,
-                                    hoist_literals=True,
-                                    rename_globals=False,
-                                    rename_locals=False,
-                                    remove_asserts=True,
-                                    remove_debug=True,
-                                    remove_explicit_return_none=True,
-                                    preserve_shebang=False,
-            )
+            # minified = python_minifier.minify(module_source,
+            #                         remove_literal_statements=True,
+            #                         remove_annotations=False,
+            #                         remove_pass=True,
+            #                         combine_imports=True,
+            #                         hoist_literals=True,
+            #                         rename_globals=False,
+            #                         rename_locals=False,
+            #                         remove_asserts=True,
+            #                         remove_debug=True,
+            #                         remove_explicit_return_none=True,
+            #                         preserve_shebang=False,
+            # )
             output.append("    __stickytape_write_module({0}, {1})\n".format(
                 repr(module_path),
-                repr(base64.b85encode(minified.encode("utf-8")))
+                repr(base64.b85encode(module_source.encode("utf-8")))
             ))
         return "".join(output)
 
