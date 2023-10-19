@@ -6,7 +6,3 @@ def is_stdlib_module(module_name):
 
 
 _stdlib_modules =  sys.stdlib_module_names
-
-
-if sys.version_info[0] >= 3:
-    _stdlib_modules.add("asyncio")
