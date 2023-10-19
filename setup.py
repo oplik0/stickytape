@@ -15,7 +15,7 @@ setup(
     author_email='mike@zwobble.org',
     url='https://github.com/mwilliamson/stickytape',
     packages=['stickytape'],
-    python_requires='>=3.5',
+    python_requires='>=3.10',
     install_requires=[
         "python-minifier==2.9.0"
     ],
