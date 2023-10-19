@@ -94,7 +94,7 @@ class ModuleWriterGenerator(object):
             # )
             output.append("    __stickytape_write_module({0}, {1})\n".format(
                 repr(module_path),
-                repr(base64.b85encode(module_source.encode("utf-8")))
+                repr(base64.b85encode(module_source))
             ))
         return "".join(output)
 
