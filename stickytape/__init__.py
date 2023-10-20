@@ -2,7 +2,6 @@ import ast
 import os.path
 import subprocess
 import python_minifier
-import base64
 import zipfile
 from io import BytesIO
 
@@ -101,12 +100,8 @@ class ModuleWriterGenerator(object):
                                             remove_explicit_return_none=True,
                                             preserve_shebang=False,
                     )
-                # output.append("    __stickytape_write_module({0}, {1})\n".format(
-                #     repr(module_path),
-                #     repr(base64.b85encode(module_source))
-                # ))
                 archive.writestr(module_path, output)
-        return f"    __stickytape_extract_archive({base64.b85encode(buffer.getvalue())})"
+        return f"    __stickytape_extract_archive({buffer.getvalue()})"
 
     def generate_for_file(self, python_file_path, add_python_modules):
         self._generate_for_module(ImportTarget(python_file_path, relative_path=None, is_package=False, module_name=None))
