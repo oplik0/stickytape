@@ -15,6 +15,7 @@ def script(
     add_python_paths=None,
     python_binary=None,
     copy_shebang=False,
+    minify=False
 ):
     if add_python_modules is None:
         add_python_modules = []
@@ -32,6 +33,7 @@ def script(
         path,
         sys_path=python_paths,
         add_python_modules=add_python_modules,
+        minify=minify
     ))
     with _open_source_file(path) as source_file:
         output.append(_indent(source_file.read()))
@@ -68,14 +70,15 @@ def _prelude():
     with open(prelude_path, encoding="utf-8") as prelude_file:
         return prelude_file.read()
 
-def _generate_module_writers(path, sys_path, add_python_modules):
-    generator = ModuleWriterGenerator(sys_path)
+def _generate_module_writers(path, sys_path, add_python_modules, minify):
+    generator = ModuleWriterGenerator(sys_path, minify)
     generator.generate_for_file(path, add_python_modules=add_python_modules)
     return generator.build()
 
 class ModuleWriterGenerator(object):
-    def __init__(self, sys_path):
+    def __init__(self, sys_path, minify):
         self._sys_path = sys_path
+        self.minify = minify
         self._modules = {}
 
     def build(self):
@@ -83,25 +86,27 @@ class ModuleWriterGenerator(object):
         with zipfile.ZipFile(buffer, 'w') as archive:
 
             for module_path, module_source in self._modules.values():
-                minified = python_minifier.minify(module_source,
-                                        remove_literal_statements=False,
-                                        remove_annotations=False,
-                                        remove_pass=True,
-                                        combine_imports=True,
-                                        hoist_literals=False,
-                                        rename_globals=False,
-                                        rename_locals=False,
-                                        remove_asserts=False,
-                                        remove_debug=True,
-                                        remove_explicit_return_none=True,
-                                        preserve_shebang=False,
-                )
+                output = module_source
+                if self.minify:
+                    output = python_minifier.minify(module_source,
+                                            remove_literal_statements=False,
+                                            remove_annotations=False,
+                                            remove_pass=True,
+                                            combine_imports=True,
+                                            hoist_literals=False,
+                                            rename_globals=False,
+                                            rename_locals=False,
+                                            remove_asserts=False,
+                                            remove_debug=True,
+                                            remove_explicit_return_none=True,
+                                            preserve_shebang=False,
+                    )
                 # output.append("    __stickytape_write_module({0}, {1})\n".format(
                 #     repr(module_path),
                 #     repr(base64.b85encode(module_source))
                 # ))
-                archive.writestr(module_path, minified)
-        return f"__stickytape_extract_archive({base64.b85encode(buffer.getvalue())})"
+                archive.writestr(module_path, output)
+        return f"    __stickytape_extract_archive({base64.b85encode(buffer.getvalue())})"
 
     def generate_for_file(self, python_file_path, add_python_modules):
         self._generate_for_module(ImportTarget(python_file_path, relative_path=None, is_package=False, module_name=None))
