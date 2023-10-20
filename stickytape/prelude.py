@@ -1,9 +1,13 @@
 
 global __stickytape_b85decode
 global __stickytape_contextlib
+global __stickytape_zipfile
+global __stickytape_bytesio
 
 import contextlib as __stickytape_contextlib
 from base64 import b85decode as __stickytape_b85decode
+from zipfile import ZipFile as __stickytape_zipfile
+from io import BytesIO as __stickytape_bytesio
 
 @__stickytape_contextlib.contextmanager
 def __stickytape_temporary_dir():
@@ -17,24 +21,10 @@ def __stickytape_temporary_dir():
 
 global __stickytape_working_dir
 with __stickytape_temporary_dir() as __stickytape_working_dir:
-    def __stickytape_write_module(path, contents):
-        import os, os.path
-
-        def make_package(path):
-            parts = path.split("/")
-            partial_path = __stickytape_working_dir
-            for part in parts:
-                partial_path = os.path.join(partial_path, part)
-                if not os.path.exists(partial_path):
-                    os.mkdir(partial_path)
-                    with open(os.path.join(partial_path, "__init__.py"), "wb") as f:
-                        f.write(b"\n")
-
-        make_package(os.path.dirname(path))
-
-        full_path = os.path.join(__stickytape_working_dir, path)
-        with open(full_path, "wb") as module_file:
-            module_file.write(__stickytape_b85decode(contents))
+    def __stickytape_extract_archive(archive):
+        buffer = __stickytape_bytesio(__stickytape_b85decode(archive))
+        archive = __stickytape_zipfile(buffer)
+        archive.extractall(__stickytape_working_dir)
     
     import sys as __stickytape_sys
     __stickytape_sys.path.insert(0, __stickytape_working_dir)

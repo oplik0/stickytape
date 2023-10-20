@@ -3,6 +3,8 @@ import os.path
 import subprocess
 import python_minifier
 import base64
+import zipfile
+from io import BytesIO
 
 from .stdlib import is_stdlib_module
 
@@ -77,26 +79,29 @@ class ModuleWriterGenerator(object):
         self._modules = {}
 
     def build(self):
-        output = []
-        for module_path, module_source in self._modules.values():
-            # minified = python_minifier.minify(module_source,
-            #                         remove_literal_statements=True,
-            #                         remove_annotations=False,
-            #                         remove_pass=True,
-            #                         combine_imports=True,
-            #                         hoist_literals=True,
-            #                         rename_globals=False,
-            #                         rename_locals=False,
-            #                         remove_asserts=True,
-            #                         remove_debug=True,
-            #                         remove_explicit_return_none=True,
-            #                         preserve_shebang=False,
-            # )
-            output.append("    __stickytape_write_module({0}, {1})\n".format(
-                repr(module_path),
-                repr(base64.b85encode(module_source))
-            ))
-        return "".join(output)
+        buffer = BytesIO()
+        with zipfile.ZipFile(buffer, 'w') as archive:
+
+            for module_path, module_source in self._modules.values():
+                minified = python_minifier.minify(module_source,
+                                        remove_literal_statements=False,
+                                        remove_annotations=False,
+                                        remove_pass=True,
+                                        combine_imports=True,
+                                        hoist_literals=False,
+                                        rename_globals=False,
+                                        rename_locals=False,
+                                        remove_asserts=False,
+                                        remove_debug=True,
+                                        remove_explicit_return_none=True,
+                                        preserve_shebang=False,
+                )
+                # output.append("    __stickytape_write_module({0}, {1})\n".format(
+                #     repr(module_path),
+                #     repr(base64.b85encode(module_source))
+                # ))
+                archive.writestr(module_path, minified)
+        return f"__stickytape_extract_archive({base64.b85encode(buffer.getvalue())})
 
     def generate_for_file(self, python_file_path, add_python_modules):
         self._generate_for_module(ImportTarget(python_file_path, relative_path=None, is_package=False, module_name=None))
