@@ -9,8 +9,8 @@ def __stickytape_extract_archive(archive_data, hash):
     dir_path.mkdir(parents=True, exist_ok=True)
     hash_file = dir_path / "hash.txt"
     if not hash_file.exists() or hash_file.read_text(encoding="utf-8").strip() != hash:
-        buffer = BytesIO(archive_data, mode="r", compression=ZIP_DEFLATED)
-        archive = ZipFile(buffer)
+        buffer = BytesIO(archive_data)
+        archive = ZipFile(buffer, mode="r", compression=ZIP_DEFLATED)
         archive.extractall(dir_path)
         hash_file.write_text(hash)
 
