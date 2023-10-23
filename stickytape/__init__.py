@@ -103,7 +103,7 @@ class ModuleWriterGenerator(object):
                 sha.update(output)
                 archive.writestr(module_path, output)
         hash = sha.hexdigest()
-        return f"__stickytape_extract_archive({buffer.getvalue()}, '{hash}')"
+        return f"__stickytape_extract_archive(b'''{str(buffer.getvalue())[2:-1]}''', '{hash}')"
 
     def generate_for_file(self, python_file_path, add_python_modules):
         self._generate_for_module(ImportTarget(python_file_path, relative_path=None, is_package=False, module_name=None))
