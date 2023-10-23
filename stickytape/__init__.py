@@ -81,6 +81,7 @@ class ModuleWriterGenerator(object):
 
     def build(self):
         buffer = BytesIO()
+        sha = hashlib.sha256()
         with zipfile.ZipFile(buffer, 'w') as archive:
 
             for module_path, module_source in self._modules.values():
@@ -99,8 +100,9 @@ class ModuleWriterGenerator(object):
                                             remove_explicit_return_none=True,
                                             preserve_shebang=False,
                     )
+                sha.update(output)
                 archive.writestr(module_path, output)
-        hash = hashlib.sha256(buffer.getvalue()).hexdigest()
+        hash = sha.hexdigest()
         return f" __stickytape_extract_archive({buffer.getvalue()}, '{hash}')"
 
     def generate_for_file(self, python_file_path, add_python_modules):
