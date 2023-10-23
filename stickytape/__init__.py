@@ -82,7 +82,7 @@ class ModuleWriterGenerator(object):
     def build(self):
         buffer = BytesIO()
         sha = hashlib.sha256()
-        with zipfile.ZipFile(buffer, 'w') as archive:
+        with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
 
             for module_path, module_source in self._modules.values():
                 output = module_source
