@@ -102,7 +102,7 @@ class ModuleWriterGenerator(object):
                                             preserve_shebang=False,
                     )
                 archive.writestr(module_path, output)
-        hash = hasblib.sha256(buffer.getvalue()).hexdigest()
+        hash = hashlib.sha256(buffer.getvalue()).hexdigest()
         return f"    __stickytape_extract_archive({buffer.getvalue()}, '{hash}')"
 
     def generate_for_file(self, python_file_path, add_python_modules):
