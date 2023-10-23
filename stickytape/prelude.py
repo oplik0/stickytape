@@ -1,16 +1,9 @@
-
-global __stickytape_zipfile
-global __stickytape_bytesio
-global __stickytape_os
-
-from zipfile import ZipFile as __stickytape_zipfile
-from io import BytesIO as __stickytape_bytesio
-import os as __stickytape os
-
 def __stickytape_extract_archive(archive_data, hash):
     from zipfile import ZipFile
     from io import BytesIO 
+    from pathlib import Path
     import os
+
     dir_path = Path(__stickytape_os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "mn2" / "dependencies"
     dir_path.mkdir(parents=True, exists_ok=True)
     hash_file = dir_path / "hash.txt"

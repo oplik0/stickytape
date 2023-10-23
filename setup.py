@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name='stickytape',
-    version='0.2.1',
+    version='0.3.0',
     description='Convert Python packages into a single script',
     long_description=read("README.rst"),
     author='Michael Williamson',
