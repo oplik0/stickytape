@@ -1,3 +1,4 @@
+
 global __stickytape_extract_archive
 def __stickytape_extract_archive(archive_data, hash):
     from zipfile import ZipFile, ZIP_DEFLATED
