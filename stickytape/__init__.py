@@ -100,7 +100,7 @@ class ModuleWriterGenerator(object):
                                             remove_explicit_return_none=True,
                                             preserve_shebang=False,
                     )
-                sha.update(output)
+                sha.update(output.encode("utf-8"))
                 archive.writestr(module_path, output)
         hash = sha.hexdigest()
         return f"__stickytape_extract_archive(b'''{str(buffer.getvalue())[2:-1]}''', '{hash}')"
