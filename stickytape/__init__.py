@@ -36,7 +36,7 @@ def script(
         minify=minify
     ))
     with _open_source_file(path) as source_file:
-        output.append(_indent(source_file.read()))
+        output.append(source_file.read())
     return "".join(output)
 
 def _read_sys_path_from_python_bin(binary_path):
@@ -53,8 +53,6 @@ def _read_sys_path_from_python_bin(binary_path):
             if line.strip()
         ]
 
-def _indent(string):
-    return "    " + string.replace("\n", "\n    ")
 
 def _generate_shebang(path, copy):
     if copy:
