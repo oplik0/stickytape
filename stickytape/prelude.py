@@ -22,5 +22,5 @@ def __stickytape_extract_archive(archive_data, hash):
 
     
     import sys
-    sys.path.insert(0, __stickytape_working_dir)
+    sys.path.insert(0, dir_path)
 
