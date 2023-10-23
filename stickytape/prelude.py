@@ -1,29 +1,26 @@
 
-global __stickytape_contextlib
 global __stickytape_zipfile
 global __stickytape_bytesio
+global __stickytape_os
 
-import contextlib as __stickytape_contextlib
 from zipfile import ZipFile as __stickytape_zipfile
 from io import BytesIO as __stickytape_bytesio
+import os as __stickytape os
 
-@__stickytape_contextlib.contextmanager
-def __stickytape_temporary_dir():
-    import tempfile
-    import shutil
-    dir_path = tempfile.mkdtemp()
-    try:
-        yield dir_path
-    finally:
-        shutil.rmtree(dir_path)
-
-global __stickytape_working_dir
-with __stickytape_temporary_dir() as __stickytape_working_dir:
-    def __stickytape_extract_archive(archive):
-        buffer = __stickytape_bytesio(archive)
+def __stickytape_extract_archive(archive_data, hash):
+    from zipfile import ZipFile
+    from io import BytesIO 
+    import os
+    dir_path = Path(__stickytape_os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "mn2" / "dependencies"
+    dir_path.mkdir(parents=True, exists_ok=True)
+    hash_file = dir_path / "hash.txt"
+    if not hash_file.exists() or hash_file.read_text(encoding="utf-8").strip() != hash:
+        buffer = __stickytape_bytesio(archive_data)
         archive = __stickytape_zipfile(buffer)
-        archive.extractall(__stickytape_working_dir)
+        archive.extractall(dir_path)
+        hash_file.write_text(hash)
+
     
-    import sys as __stickytape_sys
-    __stickytape_sys.path.insert(0, __stickytape_working_dir)
+    import sys
+    sys.path.insert(0, __stickytape_working_dir)
 

@@ -3,6 +3,7 @@ import os.path
 import subprocess
 import python_minifier
 import zipfile
+import hashlib
 from io import BytesIO
 
 from .stdlib import is_stdlib_module
@@ -101,7 +102,8 @@ class ModuleWriterGenerator(object):
                                             preserve_shebang=False,
                     )
                 archive.writestr(module_path, output)
-        return f"    __stickytape_extract_archive({buffer.getvalue()})"
+        hash = hasblib.sha256(buffer.getvalue()).hexdigest()
+        return f"    __stickytape_extract_archive({buffer.getvalue()}, '{hash}')"
 
     def generate_for_file(self, python_file_path, add_python_modules):
         self._generate_for_module(ImportTarget(python_file_path, relative_path=None, is_package=False, module_name=None))
